@@ -508,6 +508,20 @@ Before returning the result, silently check:
 - Did I use a mixed evidence label instead of splitting the statement?
 - Are all recommendations no more specific than the supplied evidence allows?
 
+FINAL SELF-CHECK — ROUND 3
+
+Also silently check:
+- Did I use one source to fill missing facts in another source?
+- Did I combine different source taxonomies into a single source-supported field?
+- Did I label a calculated or threshold-comparison result as [Source-supported fact] instead of [Derived result]?
+- Did I label missing information as [Source-supported fact]?
+- Did one sentence contain both source fact and interpretation under a single label?
+- Did I treat an approved deviation as equivalent to final approval?
+- Did I describe an exception condition as an acceptance criterion?
+- Did I infer customer approval, authorization, or governance details that the case source did not explicitly state?
+- Did I convert historical case evidence into deterministic tool logic?
+- Did I accidentally imply that meeting one requirement proves full release or approval?
+
 If any answer indicates unsupported expansion, revise the output before returning it.`;
 
 export const Route = createFileRoute("/api/synthesize")({
