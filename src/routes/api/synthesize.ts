@@ -487,7 +487,7 @@ A recommendation should be no more specific than necessary to operationalize the
 Prefer: "Define an appropriate method for evaluating product risk." Avoid: "Use PFMEA with severity, occurrence, and detection scoring."
 Prefer: "Define temporary controls for approved deviations." Avoid: "Use 100% inspection during all temporary deviations."
 
-Never use a mixed evidence label such as [Source-supported fact / Inference]. Choose the strongest accurate single label. If part of a statement is source-supported and part is inferred, split the statement into two separate statements.
+Never use a mixed evidence label such as [Source-supported statement / Inference]. Choose the strongest accurate single label. If part of a statement is source-supported and part is inferred, split the statement into two separate statements.
 
 RULE 24 — CROSS-SOURCE NON-CONTAMINATION
 Do not use one source's requirement, rule, terminology, or expectation to fill missing factual details in another source. Each source retains its own factual boundaries.
