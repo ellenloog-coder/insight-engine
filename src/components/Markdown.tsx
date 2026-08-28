@@ -31,14 +31,14 @@ export function Markdown({ text }: { text: string }) {
 
         const heading = /^(#{1,6})\s+(.*)$/.exec(line);
         if (heading) {
-          const level = heading[1].length;
+          const level = heading[1]!.length;
           const cls =
             level <= 2
               ? "mt-6 text-lg font-bold text-foreground"
               : "mt-4 text-base font-semibold text-foreground";
           return (
             <h3 key={i} className={cls}>
-              {inline(heading[2])}
+              {inline(heading[2]!)}
             </h3>
           );
         }
@@ -48,7 +48,7 @@ export function Markdown({ text }: { text: string }) {
           return (
             <div key={i} className="flex gap-3 pl-1">
               <span className="mt-0.5 h-3.5 w-3.5 shrink-0 border border-primary/70" />
-              <span>{inline(checkbox[2])}</span>
+              <span>{inline(checkbox[2]!)}</span>
             </div>
           );
 
@@ -57,7 +57,7 @@ export function Markdown({ text }: { text: string }) {
           return (
             <div key={i} className="flex gap-3 pl-1">
               <span className="text-primary">—</span>
-              <span>{inline(bullet[1])}</span>
+              <span>{inline(bullet[1]!)}</span>
             </div>
           );
 
@@ -66,7 +66,7 @@ export function Markdown({ text }: { text: string }) {
           return (
             <div key={i} className="flex gap-3 pl-1">
               <span className="text-primary">{numbered[1]}</span>
-              <span>{inline(numbered[2])}</span>
+              <span>{inline(numbered[2]!)}</span>
             </div>
           );
 
