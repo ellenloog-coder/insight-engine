@@ -1,24 +1,225 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useRef, useState } from "react";
+import { ClipboardCheck, Copy, Loader2, Wrench, FileText, FlaskConical, Square } from "lucide-react";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { Markdown } from "@/components/Markdown";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Standards Synthesist — AI Research to Quality Guidance" },
+      {
+        name: "description",
+        content:
+          "Turn industry standards, technical research and case studies into inspection checklists, engineering tool specs, technical content and research briefs.",
+      },
+      { property: "og:title", content: "Standards Synthesist" },
+      {
+        property: "og:description",
+        content:
+          "AI-assisted workflow that converts standards, research and case studies into actionable engineering deliverables.",
+      },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
+const MODES = [
+  {
+    id: "guidance" as const,
+    label: "Quality guidance",
+    hint: "Checklists, acceptance criteria, hold points",
+    icon: ClipboardCheck,
+  },
+  {
+    id: "tool" as const,
+    label: "Engineering tool",
+    hint: "Inputs, formulas, thresholds, validation cases",
+    icon: Wrench,
+  },
+  {
+    id: "content" as const,
+    label: "Technical content",
+    hint: "Publishable article with figures and takeaways",
+    icon: FileText,
+  },
+  {
+    id: "brief" as const,
+    label: "Research brief",
+    hint: "Evidence quality, conflicts, next steps",
+    icon: FlaskConical,
+  },
+];
+
+type Mode = (typeof MODES)[number]["id"];
+
 function Index() {
+  const [source, setSource] = useState("");
+  const [domain, setDomain] = useState("");
+  const [mode, setMode] = useState<Mode>("guidance");
+  const [output, setOutput] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [running, setRunning] = useState(false);
+  const abortRef = useRef<AbortController | null>(null);
+
+  const words = source.trim() ? source.trim().split(/\s+/).length : 0;
+
+  async function run() {
+    if (source.trim().length < 20) {
+      setError("Paste at least a paragraph of source material.");
+      return;
+    }
+    setError(null);
+    setOutput("");
+    setRunning(true);
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    try {
+      const res = await fetch("/api/synthesize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ source, mode, domain: domain || undefined }),
+        signal: controller.signal,
+      });
+
+      if (!res.ok || !res.body) {
+        const data = (await res.json().catch(() => null)) as { error?: string } | null;
+        setError(data?.error ?? "The analysis failed. Please try again.");
+        return;
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        setOutput((prev) => prev + decoder.decode(value, { stream: true }));
+      }
+    } catch (err) {
+      if ((err as Error)?.name !== "AbortError")
+        setError("Connection interrupted. Please try again.");
+    } finally {
+      setRunning(false);
+      abortRef.current = null;
+    }
+  }
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <main className="mx-auto max-w-6xl px-5 py-10 md:py-16">
+      <header className="border-b border-border pb-8">
+        <p className="label-caps">AI-assisted research workflow</p>
+        <h1 className="mt-3 text-3xl font-bold text-foreground md:text-4xl">
+          Standards <span className="text-primary">Synthesist</span>
+        </h1>
+        <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
+          Paste industry standards, technical research or real-world case studies. Get back
+          actionable quality guidance, engineering tool specs, or publishable technical content —
+          grounded in the source, with gaps and inferences flagged.
+        </p>
+      </header>
+
+      <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+        <section className="panel p-5">
+          <label className="label-caps" htmlFor="source">
+            Source material
+          </label>
+          <Textarea
+            id="source"
+            value={source}
+            onChange={(e) => setSource(e.target.value)}
+            placeholder="Paste clauses from a standard, a research abstract, a field failure report, inspection notes…"
+            className="mt-2 min-h-[280px] resize-y bg-background/60 font-mono text-sm"
+          />
+          <p className="mt-2 text-right text-xs text-muted-foreground">{words} words</p>
+
+          <label className="label-caps mt-5 block" htmlFor="domain">
+            Domain / context (optional)
+          </label>
+          <Input
+            id="domain"
+            value={domain}
+            onChange={(e) => setDomain(e.target.value)}
+            placeholder="e.g. structural welding, sterile packaging, EV battery assembly"
+            className="mt-2 bg-background/60 text-sm"
+          />
+
+          <p className="label-caps mt-6 block">Deliverable</p>
+          <div className="mt-2 grid gap-2 sm:grid-cols-2">
+            {MODES.map((m) => {
+              const Icon = m.icon;
+              const active = mode === m.id;
+              return (
+                <button
+                  key={m.id}
+                  type="button"
+                  onClick={() => setMode(m.id)}
+                  aria-pressed={active}
+                  className={`rounded-md border p-3 text-left transition-colors ${
+                    active
+                      ? "border-primary bg-primary/10"
+                      : "border-border bg-background/40 hover:border-primary/50"
+                  }`}
+                >
+                  <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <Icon className={`h-4 w-4 ${active ? "text-primary" : "text-muted-foreground"}`} />
+                    {m.label}
+                  </span>
+                  <span className="mt-1 block text-xs text-muted-foreground">{m.hint}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-2">
+            <Button onClick={run} disabled={running} className="font-semibold">
+              {running ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+              {running ? "Synthesizing…" : "Run synthesis"}
+            </Button>
+            {running ? (
+              <Button variant="outline" onClick={() => abortRef.current?.abort()}>
+                <Square className="h-3.5 w-3.5" /> Stop
+              </Button>
+            ) : null}
+          </div>
+          {error ? <p className="mt-3 text-sm text-destructive">{error}</p> : null}
+        </section>
+
+        <section className="panel flex min-h-[420px] flex-col p-5">
+          <div className="flex items-center justify-between border-b border-border pb-3">
+            <p className="label-caps">Output</p>
+            {output ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigator.clipboard?.writeText(output)}
+              >
+                <Copy className="h-3.5 w-3.5" /> Copy
+              </Button>
+            ) : null}
+          </div>
+
+          <div className="mt-4 flex-1 overflow-auto">
+            {output ? (
+              <Markdown text={output} />
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                {running
+                  ? "Reading the source and drafting…"
+                  : "Your deliverable will stream here, section by section."}
+              </p>
+            )}
+          </div>
+        </section>
+      </div>
+
+      <footer className="mt-10 border-t border-border pt-5 text-xs text-muted-foreground">
+        Output is source-grounded drafting support — always verify clause numbers and acceptance
+        criteria against the controlling standard before release.
+      </footer>
+    </main>
   );
 }
