@@ -212,7 +212,6 @@ function Index() {
               return (
                 <div
                   key={m.id}
-                  onClick={() => console.log("card click", m.id)}
                   className={`rounded-md border transition-colors ${
                     active
                       ? "border-primary bg-primary/10"
