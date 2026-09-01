@@ -241,7 +241,10 @@ function Index() {
                         aria-label={`More about ${m.label}`}
                         aria-expanded={infoOpen}
                         className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
-                        onClick={() => setOpenInfoId(infoOpen ? null : m.id)}
+                        onClick={() => {
+                          console.log("info click", m.id, infoOpen);
+                          setOpenInfoId(infoOpen ? null : m.id);
+                        }}
                       >
                         <Info className="pointer-events-none h-4 w-4" />
                       </button>
