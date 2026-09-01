@@ -115,10 +115,15 @@ function Index() {
   const [domain, setDomain] = useState("");
   const [mode, setMode] = useState<Mode>("guidance");
   const [openInfoId, setOpenInfoId] = useState<string | null>(null);
+  const [whyUsOpen, setWhyUsOpen] = useState(false); // New state for Why Us
   const [output, setOutput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    console.log("Index mounted");
+  }, []);
 
   const words = source.trim() ? source.trim().split(/\s+/).length : 0;
 
