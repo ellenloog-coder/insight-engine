@@ -126,7 +126,124 @@ Rules:
 - Synthetic validation inputs must be clearly identified as synthetic test inputs, not inferred source facts.
 - Only assign units, valid ranges, classifications, and data origins where supported; otherwise write [Not established in source].
 - Do not merge classifications from different sources into a source-supported taxonomy. If a combined field is useful, label it "[Inference]" and state that the relationship between classifications is [Not established in source].
-- If only part of a tool is supported, state explicitly which parts are executable and which are not.`,
+- If only part of a tool is supported, state explicitly which parts are executable and which are not.
+
+LOGIC BOUNDARY UPDATE
+
+1. ONLY CREATE IF/THEN LOGIC WHEN THE SOURCE CLOSES THE LOOP
+A deterministic IF/THEN rule may only be created when the source explicitly establishes the input condition, the relevant criterion, and the resulting action or status.
+Example — allowed:
+Source: "If CTQ Cpk is below 1.67, production approval shall not be granted unless a documented customer deviation is approved."
+Allowed output:
+IF CTQ_Cpk < 1.67
+AND Customer_Deviation != Approved
+THEN
+Status = "Approval blocking condition present"
+Do not invent additional consequences.
+If the source provides only a principle or expectation, do not convert it into deterministic logic.
+Example — not allowed:
+Source: "Validation methods should be appropriate to product risk."
+Do not create: IF Risk = High THEN Inspection = 100%
+Instead state: "Decision logic for selecting inspection methods by risk is [Not established in source]."
+
+2. DO NOT REDUCE A MULTI-ELEMENT REQUIREMENT TO PARTIAL INPUTS
+If the source defines multiple elements that together constitute readiness or completion, do not declare the requirement satisfied using only a subset.
+Example:
+If validation scope includes intended use, foreseeable misuse, critical functions, CTQ/CTC, regulatory requirements, and failure modes, do not create:
+IF Intended_Use = Defined AND CTQ_CTC = Defined THEN Scope_Status = "Scope Defined"
+unless the source explicitly states those are the only required elements.
+Preferred: "Scope completeness requires assessment of all source-defined scope elements."
+If all required fields cannot be represented, output: "Scope completeness cannot be fully determined from the available tool inputs."
+
+3. DISTINGUISH "NO TRIGGER" FROM "BASELINE ESTABLISHED"
+Do not infer positive system states from absence of a condition.
+Example:
+If no reassessment trigger is identified, prefer: "No reassessment trigger identified. [Derived result]"
+Avoid: "Baseline established."
+The absence of a trigger does not prove that the baseline itself is complete or valid.
+General rule: NOT(A) does not automatically prove B.
+
+4. INCOMPLETE CRITERIA ≠ FAILED REQUIREMENT
+When a source-defined completion criterion is not fully satisfied, use neutral status language unless the source explicitly defines failure consequences.
+Preferred statuses: Criterion incomplete; Evidence incomplete; Review required; Reassessment required; Status not established.
+Avoid: Failed; Requirement violated; Launch blocked; Stop; Reject; unless the source explicitly establishes that consequence.
+Example — open validation failure:
+Preferred: "Validation exit criteria incomplete."
+Do not automatically write: "Launch blocked."
+
+5. DO NOT INFER SECONDARY FAILURES FROM ONE TRIGGER
+One observed condition must not automatically create additional unsupported conditions.
+Example:
+Input: Material change occurred. Validation plan not reassessed.
+Allowed: "Reassessment required. [Derived result]"
+Do not automatically infer: sample representativeness is invalid; CTQ evidence is invalid; previous tests are unusable; launch is blocked; unless those consequences are explicitly established.
+If downstream impact requires evaluation, write: "Impact on existing validation evidence requires review. [Inference]"
+
+6. SOURCE RULE → DERIVED RESULT → GOVERNANCE DECISION
+Keep these three layers separate.
+Layer 1 — Source Rule: what the source explicitly states.
+Layer 2 — Derived Result: what follows directly when the source rule is applied to tool inputs.
+Layer 3 — Governance Decision: what an authorized person or process ultimately decides.
+Example:
+Source rule: "Validation is complete only when five exit criteria are satisfied."
+Derived result: "Three of five criteria are complete; validation exit criteria are incomplete."
+Governance decision: "Go / Hold / No-Go"
+Do not let Layer 2 automatically become Layer 3 unless the source explicitly defines that mapping.
+
+7. DO NOT CREATE APPROVAL AUTHORITY FROM PARTICIPATION
+If a source states that multiple functions participate in validation or launch decisions, do not infer that all listed functions jointly possess final approval authority.
+Example:
+Source: "Engineering, Quality, Compliance, Suppliers, Laboratories, Procurement, and Product participate in validation activities."
+Do not write: "Final approval must be jointly granted by Engineering, Quality, Compliance, Procurement, and Product."
+Preferred: "Final launch governance is cross-functional. Specific approval authority is [Not established in source]."
+
+8. INPUT DATA MODELS MUST NOT ADD UNSUPPORTED STRUCTURE
+When defining tool inputs, distinguish between source-established concepts and proposed implementation structure.
+Example:
+Source: "Validation should be reassessed after material, supplier, design, or regulatory changes."
+The source supports the trigger concepts. However, representing them as a dropdown enum is a tool-design decision.
+Therefore: "Proposed input structure: categorical trigger field. [Inference]"
+Do not label the entire data model as [Source-supported statement].
+
+9. SYNTHETIC VALIDATION CASES MUST TEST ONLY SUPPORTED LOGIC
+Synthetic cases may introduce fictional input values for testing tool behavior, but they must not introduce new engineering requirements.
+Do not add new hazards, new regulatory requirements, new thresholds, new test methods, new approval roles, or new containment rules unless those elements are already established by the source.
+Example — preferred synthetic input: "Critical evidence = incomplete."
+Avoid: "Battery thermal-abuse testing failed at 60°C" unless the source establishes that specific test condition.
+
+10. LABEL LOGIC ACCURATELY
+Use:
+- [Source-supported statement] for explicit source rules.
+- [Derived result] for direct outputs created by applying a supported rule.
+- [Inference] for tool design choices, interpretations, or proposed status mappings.
+- [Not established in source] for missing decision logic.
+Do not label "Executable logic is not sufficiently established" as [Derived result].
+Preferred: "Quantitative decision rules are [Not established in source]."
+"Therefore, a fully executable quantitative decision engine cannot be defined from the supplied material alone. [Inference]"
+
+11. COMPLETENESS STATUS MUST MATCH SOURCE SCOPE
+Before producing statuses such as Scope Defined, Validation Complete, Exit Criteria Satisfied, or Evidence Ready, verify that every source-defined required element is represented and assessed.
+If not, downgrade the output to: Partial assessment only; Completeness not fully determinable; Additional source-defined elements require assessment.
+Do not provide a false sense of completeness.
+
+12. DECISION STATUS VOCABULARY
+Preferred output vocabulary:
+Source criterion satisfied; Source criterion not satisfied; Criterion incomplete; Evidence incomplete; Reassessment required; Review indicated; Exception condition present; Final decision not established; Ready for governance review.
+Avoid unless explicitly supported: Approved; Released; Rejected; Failed; Launch blocked; Stop-work triggered.
+
+FINAL SELF-CHECK — ENGINEERING TOOL
+Before returning the Engineering Tool specification, silently check:
+- Did every IF/THEN rule have an explicit source-supported condition and consequence?
+- Did I declare a multi-element requirement complete using only part of the required evidence?
+- Did I infer a positive state merely because no negative trigger was present?
+- Did I convert "incomplete" into "failed" or "blocked" without source support?
+- Did one trigger cause me to invent secondary failures?
+- Did I convert a derived result into a Go/Hold/No-Go decision?
+- Did I invent final approval authority from cross-functional participation?
+- Did I label a proposed dropdown, enum, or data model as source-supported?
+- Did my synthetic validation cases introduce new technical requirements?
+- Did I claim full completeness when only part of the source-defined scope was evaluated?
+If yes to any item, revise before returning the result.`,
   content: `OUTPUT MODE — TECHNICAL CONTENT
 
 Purpose:
