@@ -40,26 +40,52 @@ export const Route = createFileRoute("/")({
 const MODES = [
   {
     id: "guidance" as const,
-    label: "Quality guidance",
-    hint: "Checklists, acceptance criteria, hold points",
+    label: "Quality Guidance",
+    shortDescription: "Turn source material into practical quality guidance and checklists.",
+    whatItCreates:
+      "Structured quality guidance, verification checklists, evidence requirements, decision points, and open questions.",
+    bestUsedFor:
+      "Quality planning, inspection planning, validation guidance, supplier quality reviews, and internal process drafting.",
+    boundary:
+      "Does not invent unsupported acceptance criteria, approval authority, regulatory requirements, quantitative thresholds, or mandatory controls.",
     icon: ClipboardCheck,
   },
   {
     id: "tool" as const,
-    label: "Engineering tool",
-    hint: "Inputs, formulas, thresholds, validation cases",
+    label: "Engineering Tool Specification",
+    shortDescription:
+      "Turn a methodology into a specification for a spreadsheet, workflow, or software tool.",
+    whatItCreates:
+      "Inputs, source-supported rules, derived logic, outputs, assumptions, applicability limits, and validation cases.",
+    bestUsedFor:
+      "Creating spreadsheets, checklists, internal workflows, decision-support tools, or software prototypes from technical methodologies.",
+    boundary:
+      "Only creates executable logic where the source clearly establishes the condition and outcome. Missing formulas, thresholds, approval rules, or decision logic remain undefined.",
     icon: Wrench,
   },
   {
     id: "content" as const,
-    label: "Technical content",
-    hint: "Publishable article with figures and takeaways",
+    label: "Technical Content",
+    shortDescription: "Turn technical material into clear, publishable content.",
+    whatItCreates:
+      "Headline options, executive summary, structured technical body, key takeaways, and suggested figures or tables.",
+    bestUsedFor:
+      "Technical articles, blogs, newsletters, knowledge-sharing content, internal training materials, and methodology explanations.",
+    boundary:
+      "May improve structure and explanation, but does not add unsupported technical claims, standards, thresholds, or generalize case-study practices beyond the source.",
     icon: FileText,
   },
   {
     id: "brief" as const,
-    label: "Research brief",
-    hint: "Evidence quality, conflicts, next steps",
+    label: "Research Brief",
+    shortDescription:
+      "Understand what the source establishes, where gaps exist, and what needs further investigation.",
+    whatItCreates:
+      "Source-supported findings, evidence limitations, standards or references mentioned, case evidence, gaps, conflicts, uncertainty, and recommended next investigations.",
+    bestUsedFor:
+      "Early-stage research, standards review, evidence comparison, technical due diligence, and identifying knowledge gaps.",
+    boundary:
+      "Preserves uncertainty and evidence gaps rather than filling them with unsupported assumptions or general model knowledge.",
     icon: FlaskConical,
   },
 ];
