@@ -247,6 +247,7 @@ function Index() {
                             type="button"
                             aria-label={`More about ${m.label}`}
                             className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+                            onClick={() => setOpenPopoverId(openPopoverId === m.id ? null : m.id)}
                           >
                             <Info className="h-4 w-4" />
                           </button>
