@@ -259,6 +259,9 @@ Recommendations must remain close to the evidence and must not be a channel for 
 26. MISSING INFORMATION IS A VALID RESULT
 Do not force template completeness. Method / Threshold / Approval authority / Retention period / Required record may each be [Not established in source]. Insufficient evidence is a valid professional conclusion.
 
+27. OPERATIONALIZATION BOUNDARY
+When operationalizing an abstract methodology, do not invent organization-specific implementation mechanisms such as approval levels, PLM gates, purchase-order blocks, system workflows, statistical thresholds, or specific records unless they are established by the source. Keep recommendations one level more abstract when implementation details are not provided.
+
 OUTPUT FORMAT
 Use concise Markdown. Do not add unnecessary explanatory text or detail added only to look more professional.
 
