@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import {
   ClipboardCheck,
+  ChevronDown,
   Copy,
   Info,
   Loader2,
