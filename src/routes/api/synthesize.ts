@@ -292,6 +292,7 @@ Before returning any output, silently verify:
 - Did I convert an observed method into a required method?
 - Did I convert an activity into a required record?
 - Did I invent organization-specific implementation mechanisms when operationalizing an abstract methodology?
+- Did I turn principles, recommended practices, or conceptual frameworks into mandatory controls, launch prerequisites, or required governance mechanisms?
 - Did I confuse source statement with derived result?
 - Did I confuse inference with derived result?
 - Did I clearly expose missing evidence?
