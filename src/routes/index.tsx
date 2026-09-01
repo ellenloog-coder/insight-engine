@@ -182,6 +182,7 @@ function Index() {
       <section className="mt-6 rounded-md border border-border bg-background/40">
         <button
           type="button"
+          aria-label="Why use Standards Synthesist"
           onClick={() => setWhyUsOpen((v) => !v)}
           aria-expanded={whyUsOpen}
           className="flex w-full items-center justify-between px-4 py-3 text-left transition-colors hover:bg-primary/5"
