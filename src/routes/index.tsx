@@ -1,10 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import { ClipboardCheck, Copy, Loader2, Wrench, FileText, FlaskConical, Square } from "lucide-react";
+import {
+  ClipboardCheck,
+  Copy,
+  Info,
+  Loader2,
+  Wrench,
+  FileText,
+  FlaskConical,
+  Square,
+} from "lucide-react";
 
 import { Markdown } from "@/components/Markdown";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 
 export const Route = createFileRoute("/")({
