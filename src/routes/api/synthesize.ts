@@ -37,7 +37,61 @@ Rules:
 - Keep requirement and exception condition separate; do not collapse them into a single acceptance criterion.
 - Do not create hold points, stop-work gates, sign-offs, or escalation paths unless supported. If proposing one, keep it generic and label it [Recommendation].
 - Label each field individually. Do not attach one evidence label to a checklist item whose fields mix source statements, derived results, inference, and unknowns.
-- Threshold comparisons and calculated results are [Derived result], never [Source-supported statement].`,
+- Threshold comparisons and calculated results are [Derived result], never [Source-supported statement].
+
+HARD BOUNDARIES — QUALITY GUIDANCE
+
+Do not convert conceptual requirements into mandatory artifacts.
+A source may require: ownership; risk review; validation evidence; regulatory consideration; corrective action; residual-risk acceptance.
+Do not automatically convert these concepts into mandatory: forms; templates; records; reports; sign-off sheets; RACI matrices; PLM gates; approval workflows; system fields; archives; repositories; unless the source explicitly requires that specific artifact.
+Example:
+Source: "Validation requires cross-functional ownership."
+Preferred: "Verification focus: evidence that cross-functional ownership is defined. [Source-supported statement]"
+Avoid: "Required record: cross-functional ownership assignment form. [Source-supported statement]"
+
+Evidence requirements must remain evidence-neutral unless the source specifies the artifact.
+Preferred: "Evidence of residual-risk review and acceptance. [Inference]"
+Avoid: "Documented residual-risk acceptance record. [Source-supported statement]"
+Preferred: "Evidence addressing applicable regulatory requirements. [Inference]"
+Avoid: "Regulatory compliance and certification records. [Source-supported statement]"
+unless those specific records are explicitly stated in the source.
+
+Recommendations must not introduce mandatory quantitative controls without source support.
+Do not recommend: specific Cpk thresholds; statistical sample sizes; confidence levels; AQL values; acceptance margins; mandatory statistical methods; unless the source already establishes the need for that specific type of quantitative control.
+Preferred: "Define appropriate acceptance criteria and evidence requirements for each CTQ/CTC based on product risk and validation method. [Recommendation]"
+Avoid: "Define explicit statistical sample sizes and Cpk thresholds for all CTQ/CTC characteristics. [Recommendation]"
+
+Do not force every CTQ/CTC into a numerical acceptance model.
+Some CTQ/CTC characteristics may require: qualitative evidence; certification evidence; functional verification; dimensional criteria; material compliance evidence; other product-specific evidence.
+Do not assume all CTQ/CTC characteristics require statistical thresholds.
+
+Open Questions must use [Not established in source] when they identify missing information.
+Example: "What quantitative criteria define acceptable CTQ performance? [Not established in source]"
+Do not label missing-information questions as [Inference].
+
+Preserve methodology-level abstraction.
+When the source provides a framework or principle rather than an implementation procedure, keep the output at the same abstraction level unless the source explicitly defines implementation details.
+Example:
+Source: "Re-validation should be triggered by significant product or supplier changes."
+Preferred: "Verification focus: evidence that significant changes are assessed for re-validation need. [Source-supported statement]"
+Avoid: "All changes must be routed through an ECM workflow with Quality approval. [Source-supported statement]"
+
+Do not create approval authority from participation.
+If the source states that multiple functions participate in a review or decision, do not infer: final approver; approval hierarchy; sign-off authority; escalation authority; unless explicitly defined.
+
+Checklist structure must not imply stronger governance than the source.
+If the source provides: principle; expectation; recommended practice; do not automatically convert it into: mandatory gate; hold point; stop-work condition; release blocker.
+Use: "Verification Focus" unless a mandatory decision condition is explicitly established.
+
+Before returning Quality Guidance, silently check:
+- Did I turn a concept into a required document?
+- Did I introduce a template, form, RACI, PLM gate, or repository?
+- Did I introduce quantitative thresholds not present in the source?
+- Did I assume all CTQ/CTC items require statistical acceptance criteria?
+- Did I label an open question as [Inference] instead of [Not established in source]?
+- Did I create an approval authority not explicitly stated?
+- Did I turn guidance into a mandatory gate?
+If yes, revise before returning the output.`,
   tool: `OUTPUT MODE — ENGINEERING TOOL
 
 Purpose:
