@@ -1,6 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import { ClipboardCheck, Copy, Loader2, Wrench, FileText, FlaskConical, Square } from "lucide-react";
+import {
+  ClipboardCheck,
+  ChevronDown,
+  Copy,
+  Info,
+  Loader2,
+  Wrench,
+  FileText,
+  FlaskConical,
+  Square,
+} from "lucide-react";
 
 import { Markdown } from "@/components/Markdown";
 import { Button } from "@/components/ui/button";
@@ -30,36 +40,83 @@ export const Route = createFileRoute("/")({
 const MODES = [
   {
     id: "guidance" as const,
-    label: "Quality guidance",
-    hint: "Checklists, acceptance criteria, hold points",
+    label: "Quality Guidance",
+    shortDescription: "Turn source material into practical quality guidance and checklists.",
+    whatItCreates:
+      "Structured quality guidance, verification checklists, evidence requirements, decision points, and open questions.",
+    bestUsedFor:
+      "Quality planning, inspection planning, validation guidance, supplier quality reviews, and internal process drafting.",
+    boundary:
+      "Does not invent unsupported acceptance criteria, approval authority, regulatory requirements, quantitative thresholds, or mandatory controls.",
     icon: ClipboardCheck,
   },
   {
     id: "tool" as const,
-    label: "Engineering tool",
-    hint: "Inputs, formulas, thresholds, validation cases",
+    label: "Engineering Tool Specification",
+    shortDescription:
+      "Turn a methodology into a specification for a spreadsheet, workflow, or software tool.",
+    whatItCreates:
+      "Inputs, source-supported rules, derived logic, outputs, assumptions, applicability limits, and validation cases.",
+    bestUsedFor:
+      "Creating spreadsheets, checklists, internal workflows, decision-support tools, or software prototypes from technical methodologies.",
+    boundary:
+      "Only creates executable logic where the source clearly establishes the condition and outcome. Missing formulas, thresholds, approval rules, or decision logic remain undefined.",
     icon: Wrench,
   },
   {
     id: "content" as const,
-    label: "Technical content",
-    hint: "Publishable article with figures and takeaways",
+    label: "Technical Content",
+    shortDescription: "Turn technical material into clear, publishable content.",
+    whatItCreates:
+      "Headline options, executive summary, structured technical body, key takeaways, and suggested figures or tables.",
+    bestUsedFor:
+      "Technical articles, blogs, newsletters, knowledge-sharing content, internal training materials, and methodology explanations.",
+    boundary:
+      "May improve structure and explanation, but does not add unsupported technical claims, standards, thresholds, or generalize case-study practices beyond the source.",
     icon: FileText,
   },
   {
     id: "brief" as const,
-    label: "Research brief",
-    hint: "Evidence quality, conflicts, next steps",
+    label: "Research Brief",
+    shortDescription:
+      "Understand what the source establishes, where gaps exist, and what needs further investigation.",
+    whatItCreates:
+      "Source-supported findings, evidence limitations, standards or references mentioned, case evidence, gaps, conflicts, uncertainty, and recommended next investigations.",
+    bestUsedFor:
+      "Early-stage research, standards review, evidence comparison, technical due diligence, and identifying knowledge gaps.",
+    boundary:
+      "Preserves uncertainty and evidence gaps rather than filling them with unsupported assumptions or general model knowledge.",
     icon: FlaskConical,
   },
 ];
 
 type Mode = (typeof MODES)[number]["id"];
 
+function ModeInfoContent({ mode }: { mode: (typeof MODES)[number] }) {
+  return (
+    <div className="space-y-3 text-sm">
+      <div>
+        <p className="font-semibold text-foreground">What it creates</p>
+        <p className="text-muted-foreground">{mode.whatItCreates}</p>
+      </div>
+      <div>
+        <p className="font-semibold text-foreground">Best used for</p>
+        <p className="text-muted-foreground">{mode.bestUsedFor}</p>
+      </div>
+      <div>
+        <p className="font-semibold text-foreground">Boundary</p>
+        <p className="text-muted-foreground">{mode.boundary}</p>
+      </div>
+    </div>
+  );
+}
+
 function Index() {
   const [source, setSource] = useState("");
   const [domain, setDomain] = useState("");
   const [mode, setMode] = useState<Mode>("guidance");
+  const [openInfoId, setOpenInfoId] = useState<string | null>(null);
+  const [whyUsOpen, setWhyUsOpen] = useState(false);
   const [output, setOutput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
@@ -122,6 +179,84 @@ function Index() {
         </p>
       </header>
 
+      <section className="mt-6 rounded-md border border-border bg-background/40">
+        <button
+          type="button"
+          aria-label="Why use Standards Synthesist"
+          onClick={() => setWhyUsOpen((v) => !v)}
+          aria-expanded={whyUsOpen}
+          className="flex w-full items-center justify-between px-4 py-3 text-left transition-colors hover:bg-primary/5"
+        >
+          <span className="text-sm font-semibold tracking-wide text-foreground">WHY US</span>
+          <span className="text-xs text-muted-foreground">Why use Standards Synthesist instead of a general AI model?</span>
+          <ChevronDown
+            className={`ml-2 h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-300 ${
+              whyUsOpen ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+        <div
+          className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
+            whyUsOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          }`}
+        >
+          <div className="overflow-hidden">
+            <div className="border-t border-border px-4 pb-5 pt-4">
+              <p className="max-w-3xl text-sm text-muted-foreground">
+                General-purpose AI models are designed to generate useful answers across many tasks.
+                Standards Synthesist is designed for a narrower job: turning technical methods,
+                standards, research, and case evidence into structured engineering outputs while
+                preserving evidence boundaries.
+              </p>
+
+              <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                <div className="space-y-1">
+                  <h4 className="text-sm font-semibold text-foreground">1. Evidence stays visible</h4>
+                  <p className="text-xs text-muted-foreground">
+                    Separates source-supported statements, derived results, inferences, recommendations,
+                    and gaps. Users can see what came from the source and what was added through
+                    interpretation.
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-sm font-semibold text-foreground">2. No silent gap-filling</h4>
+                  <p className="text-xs text-muted-foreground">
+                    If the source does not define a formula, threshold, approval rule, role, or acceptance
+                    criterion, the tool leaves it explicitly undefined instead of inventing one.
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-sm font-semibold text-foreground">3. Source meaning is preserved</h4>
+                  <p className="text-xs text-muted-foreground">
+                    “may”, “should”, and “shall” are not treated as interchangeable. Guidance is not
+                    automatically converted into a mandatory requirement, and a case study is not
+                    automatically turned into a universal rule.
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-sm font-semibold text-foreground">4. Built for review</h4>
+                  <p className="text-xs text-muted-foreground">
+                    The output is structured so users can review, challenge, adapt, and reuse it in real
+                    engineering work.
+                  </p>
+                </div>
+              </div>
+
+              <p className="mt-5 max-w-3xl text-sm text-foreground">
+                The goal is not simply to generate more content. The goal is to make technical knowledge
+                more usable without hiding where the evidence ends.
+              </p>
+
+              <p className="mt-4 text-xs text-muted-foreground/80">
+                Standards Synthesist supports engineering and research drafting. It does not replace
+                source verification, professional engineering judgment, regulatory interpretation, or
+                final approval authority.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
         <section className="panel p-5">
           <label className="label-caps" htmlFor="source">
@@ -152,24 +287,53 @@ function Index() {
             {MODES.map((m) => {
               const Icon = m.icon;
               const active = mode === m.id;
+              const infoOpen = openInfoId === m.id;
               return (
-                <button
+                <div
                   key={m.id}
-                  type="button"
-                  onClick={() => setMode(m.id)}
-                  aria-pressed={active}
-                  className={`rounded-md border p-3 text-left transition-colors ${
+                  className={`rounded-md border transition-colors ${
                     active
                       ? "border-primary bg-primary/10"
                       : "border-border bg-background/40 hover:border-primary/50"
                   }`}
                 >
-                  <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                    <Icon className={`h-4 w-4 ${active ? "text-primary" : "text-muted-foreground"}`} />
-                    {m.label}
-                  </span>
-                  <span className="mt-1 block text-xs text-muted-foreground">{m.hint}</span>
-                </button>
+                  <div className="flex items-stretch">
+                    <button
+                      type="button"
+                      onClick={() => setMode(m.id)}
+                      aria-pressed={active}
+                      className="flex-1 p-3 text-left"
+                    >
+                      <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                        <Icon
+                          className={`h-4 w-4 ${active ? "text-primary" : "text-muted-foreground"}`}
+                        />
+                        {m.label}
+                      </span>
+                      <span className="mt-1 block text-xs text-muted-foreground">
+                        {m.shortDescription}
+                      </span>
+                    </button>
+
+                    <div className="flex items-center pr-2">
+                      <button
+                        type="button"
+                        aria-label={`More about ${m.label}`}
+                        aria-expanded={infoOpen}
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+                        onClick={() => setOpenInfoId(infoOpen ? null : m.id)}
+                      >
+                        <Info className="pointer-events-none h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {infoOpen ? (
+                    <div className="border-t border-border px-3 pb-3">
+                      <ModeInfoContent mode={m} />
+                    </div>
+                  ) : null}
+                </div>
               );
             })}
           </div>
