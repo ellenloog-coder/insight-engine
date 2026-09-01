@@ -115,7 +115,6 @@ function Index() {
   const [domain, setDomain] = useState("");
   const [mode, setMode] = useState<Mode>("guidance");
   const [openInfoId, setOpenInfoId] = useState<string | null>(null);
-  const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
   const [output, setOutput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
