@@ -189,24 +189,74 @@ function Index() {
             {MODES.map((m) => {
               const Icon = m.icon;
               const active = mode === m.id;
+              const infoOpen = openInfoId === m.id;
               return (
-                <button
+                <div
                   key={m.id}
-                  type="button"
-                  onClick={() => setMode(m.id)}
-                  aria-pressed={active}
-                  className={`rounded-md border p-3 text-left transition-colors ${
+                  className={`rounded-md border transition-colors ${
                     active
                       ? "border-primary bg-primary/10"
                       : "border-border bg-background/40 hover:border-primary/50"
                   }`}
                 >
-                  <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                    <Icon className={`h-4 w-4 ${active ? "text-primary" : "text-muted-foreground"}`} />
-                    {m.label}
-                  </span>
-                  <span className="mt-1 block text-xs text-muted-foreground">{m.hint}</span>
-                </button>
+                  <div className="flex items-stretch">
+                    <button
+                      type="button"
+                      onClick={() => setMode(m.id)}
+                      aria-pressed={active}
+                      className="flex-1 p-3 text-left"
+                    >
+                      <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                        <Icon
+                          className={`h-4 w-4 ${active ? "text-primary" : "text-muted-foreground"}`}
+                        />
+                        {m.label}
+                      </span>
+                      <span className="mt-1 block text-xs text-muted-foreground">
+                        {m.shortDescription}
+                      </span>
+                    </button>
+
+                    <div className="hidden items-center pr-2 sm:flex">
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <button
+                            type="button"
+                            aria-label={`More about ${m.label}`}
+                            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Info className="h-4 w-4" />
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-80" align="end" sideOffset={4}>
+                          <ModeInfoContent mode={m} />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+
+                    <div className="flex items-center pr-2 sm:hidden">
+                      <button
+                        type="button"
+                        aria-label={`More about ${m.label}`}
+                        aria-expanded={infoOpen}
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOpenInfoId(infoOpen ? null : m.id);
+                        }}
+                      >
+                        <Info className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {infoOpen ? (
+                    <div className="border-t border-border px-3 pb-3 sm:hidden">
+                      <ModeInfoContent mode={m} />
+                    </div>
+                  ) : null}
+                </div>
               );
             })}
           </div>
