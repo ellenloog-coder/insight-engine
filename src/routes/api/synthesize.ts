@@ -288,6 +288,7 @@ Before returning any output, silently verify:
 - Did I apply a rule without verifying applicability?
 - Did I convert an observed method into a required method?
 - Did I convert an activity into a required record?
+- Did I invent organization-specific implementation mechanisms when operationalizing an abstract methodology?
 - Did I confuse source statement with derived result?
 - Did I confuse inference with derived result?
 - Did I clearly expose missing evidence?
