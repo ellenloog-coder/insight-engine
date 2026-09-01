@@ -242,15 +242,11 @@ function Index() {
                         open={openPopoverId === m.id}
                         onOpenChange={(open) => setOpenPopoverId(open ? m.id : null)}
                       >
-                        <PopoverTrigger asChild>
-                          <button
-                            type="button"
-                            aria-label={`More about ${m.label}`}
-                            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
-                            onClick={() => setOpenPopoverId(openPopoverId === m.id ? null : m.id)}
-                          >
-                            <Info className="h-4 w-4" />
-                          </button>
+                        <PopoverTrigger
+                          aria-label={`More about ${m.label}`}
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+                        >
+                          <Info className="h-4 w-4" />
                         </PopoverTrigger>
                         <PopoverContent className="w-80" align="end" sideOffset={4}>
                           <ModeInfoContent mode={m} />
