@@ -178,6 +178,83 @@ function Index() {
         </p>
       </header>
 
+      <section className="mt-6 rounded-md border border-border bg-background/40">
+        <button
+          type="button"
+          onClick={() => setWhyUsOpen((v) => !v)}
+          aria-expanded={whyUsOpen}
+          className="flex w-full items-center justify-between px-4 py-3 text-left transition-colors hover:bg-primary/5"
+        >
+          <span className="text-sm font-semibold tracking-wide text-foreground">WHY US</span>
+          <span className="text-xs text-muted-foreground">Why use Standards Synthesist instead of a general AI model?</span>
+          <ChevronDown
+            className={`ml-2 h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-300 ${
+              whyUsOpen ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+        <div
+          className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
+            whyUsOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          }`}
+        >
+          <div className="overflow-hidden">
+            <div className="border-t border-border px-4 pb-5 pt-4">
+              <p className="max-w-3xl text-sm text-muted-foreground">
+                General-purpose AI models are designed to generate useful answers across many tasks.
+                Standards Synthesist is designed for a narrower job: turning technical methods,
+                standards, research, and case evidence into structured engineering outputs while
+                preserving evidence boundaries.
+              </p>
+
+              <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                <div className="space-y-1">
+                  <h4 className="text-sm font-semibold text-foreground">1. Evidence stays visible</h4>
+                  <p className="text-xs text-muted-foreground">
+                    Separates source-supported statements, derived results, inferences, recommendations,
+                    and gaps. Users can see what came from the source and what was added through
+                    interpretation.
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-sm font-semibold text-foreground">2. No silent gap-filling</h4>
+                  <p className="text-xs text-muted-foreground">
+                    If the source does not define a formula, threshold, approval rule, role, or acceptance
+                    criterion, the tool leaves it explicitly undefined instead of inventing one.
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-sm font-semibold text-foreground">3. Source meaning is preserved</h4>
+                  <p className="text-xs text-muted-foreground">
+                    “may”, “should”, and “shall” are not treated as interchangeable. Guidance is not
+                    automatically converted into a mandatory requirement, and a case study is not
+                    automatically turned into a universal rule.
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-sm font-semibold text-foreground">4. Built for review</h4>
+                  <p className="text-xs text-muted-foreground">
+                    The output is structured so users can review, challenge, adapt, and reuse it in real
+                    engineering work.
+                  </p>
+                </div>
+              </div>
+
+              <p className="mt-5 max-w-3xl text-sm text-foreground">
+                The goal is not simply to generate more content. The goal is to make technical knowledge
+                more usable without hiding where the evidence ends.
+              </p>
+
+              <p className="mt-4 text-xs text-muted-foreground/80">
+                Standards Synthesist supports engineering and research drafting. It does not replace
+                source verification, professional engineering judgment, regulatory interpretation, or
+                final approval authority.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
         <section className="panel p-5">
           <label className="label-caps" htmlFor="source">
