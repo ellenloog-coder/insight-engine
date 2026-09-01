@@ -92,6 +92,25 @@ const MODES = [
 
 type Mode = (typeof MODES)[number]["id"];
 
+function ModeInfoContent({ mode }: { mode: (typeof MODES)[number] }) {
+  return (
+    <div className="space-y-3 text-sm">
+      <div>
+        <p className="font-semibold text-foreground">What it creates</p>
+        <p className="text-muted-foreground">{mode.whatItCreates}</p>
+      </div>
+      <div>
+        <p className="font-semibold text-foreground">Best used for</p>
+        <p className="text-muted-foreground">{mode.bestUsedFor}</p>
+      </div>
+      <div>
+        <p className="font-semibold text-foreground">Boundary</p>
+        <p className="text-muted-foreground">{mode.boundary}</p>
+      </div>
+    </div>
+  );
+}
+
 function Index() {
   const [source, setSource] = useState("");
   const [domain, setDomain] = useState("");
