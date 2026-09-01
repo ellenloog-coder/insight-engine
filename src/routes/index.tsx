@@ -238,16 +238,11 @@ function Index() {
 
                     <div className="flex items-center pr-2">
                       <button
-                        key={`info-${m.id}`}
                         type="button"
                         aria-label={`More about ${m.label}`}
                         aria-expanded={infoOpen}
-                        className="relative z-10 inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log("info click", m.id, infoOpen);
-                          setOpenInfoId(infoOpen ? null : m.id);
-                        }}
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+                        onClick={() => setOpenInfoId(infoOpen ? null : m.id)}
                       >
                         <Info className="pointer-events-none h-4 w-4" />
                       </button>
