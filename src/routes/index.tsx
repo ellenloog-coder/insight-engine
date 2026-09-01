@@ -235,24 +235,7 @@ function Index() {
                       </span>
                     </button>
 
-                    <div className="hidden items-center pr-2 sm:flex">
-                      <Popover
-                        open={openPopoverId === m.id}
-                        onOpenChange={(open) => setOpenPopoverId(open ? m.id : null)}
-                      >
-                        <PopoverTrigger
-                          aria-label={`More about ${m.label}`}
-                          className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
-                        >
-                          <Info className="h-4 w-4" />
-                        </PopoverTrigger>
-                        <PopoverContent className="w-80" align="end" sideOffset={4}>
-                          <ModeInfoContent mode={m} />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-
-                    <div className="flex items-center pr-2 sm:hidden">
+                    <div className="flex items-center pr-2">
                       <button
                         type="button"
                         aria-label={`More about ${m.label}`}
@@ -266,7 +249,7 @@ function Index() {
                   </div>
 
                   {infoOpen ? (
-                    <div className="border-t border-border px-3 pb-3 sm:hidden">
+                    <div className="border-t border-border px-3 pb-3">
                       <ModeInfoContent mode={m} />
                     </div>
                   ) : null}
