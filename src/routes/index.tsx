@@ -238,7 +238,10 @@ function Index() {
                     </button>
 
                     <div className="hidden items-center pr-2 sm:flex">
-                      <Popover>
+                      <Popover
+                        open={openPopoverId === m.id}
+                        onOpenChange={(open) => setOpenPopoverId(open ? m.id : null)}
+                      >
                         <PopoverTrigger asChild>
                           <button
                             type="button"
